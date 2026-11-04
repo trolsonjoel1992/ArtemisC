@@ -42,24 +42,5 @@ typedef struct {
 } Evento;
 
 /* ===== artemis.c ===== */
-void   inicializarMision(EstadoMision *e);                               /* Joel   */
-void   guardarConfiguracion(EstadoMision *e, double v, double h, double m); /* Joel */
-void   precargarEventos(Evento eventos[CANT_EVENTOS]);                   /* Joel   */
-void   simularTurno(EstadoMision *e, Evento *ev);                        /* Juampi */
-void   mostrarEstado(const EstadoMision *e);                             /* Juampi */
-int    pedirAccionTurno(void);                                           /* Juampi */
-void   aplicarMantenerRumbo(EstadoMision *e, Evento *ev);                /* Juampi */
-void   aplicarPropulsorAuxiliar(EstadoMision *e, Evento *ev);            /* Juampi */
-void   aplicarAbortar(EstadoMision *e);                                  /* Juampi */
-void   registrarHistorial(EstadoMision *e, const char *msg);             /* Joel   */
-int    misionSigueActiva(const EstadoMision *e);                         /* Joel   */
-void   generarReporte(EstadoMision *e);                                  /* Maxi   */
-double calcularEnergiaCinetica(double m, double v);                      /* Maxi   */
-double calcularEnergiaPotencial(double m, double r);                     /* Maxi   */
-double calcularPuntoEquilibrio(void);                                    /* Maxi   */
-double calcularTrabajoRequerido(EstadoMision *e);                        /* Maxi   */
-void   imprimirHistorial(const EstadoMision *e);                         /* Maxi   */
-void   imprimirReporte(const EstadoMision *e);                           /* Maxi   */
-void   imprimirExplicacionFisica(void);                                  /* Joel   */
 
 #endif
