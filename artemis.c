@@ -1,7 +1,10 @@
 #include <stdio.h>
+#include <string.h>
+#include <math.h>
 #include "artemis.h"
+#include "validaciones.h"
 
-/* ================= JOEL ================= */
+/* Joel  */
 void inicializarMision(EstadoMision *e)
 {
     /* TODO(joel): ceros + fase 0 */
@@ -38,7 +41,7 @@ void imprimirExplicacionFisica(void)
     /* TODO(joel) */
 }
 
-/* ================= MAXI ================= */
+/* Maxi  */
 void generarReporte(EstadoMision *e)
 {
     /* TODO(maxi) */
@@ -84,7 +87,7 @@ void imprimirReporte(const EstadoMision *e)
     (void)e;
 }
 
-/* ================= JUAMPI ================= */
+/* Juampi  */
 void simularTurno(EstadoMision *e, Evento *ev)
 {
     /* TODO(juampi): mostrar estado, pedir acción, despachar, registrar */

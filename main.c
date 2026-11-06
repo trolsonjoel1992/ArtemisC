@@ -1,8 +1,10 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include "artemis.h"
 #include "validaciones.h"
 
-void mostrarMenuPrincipal(void)                  /* Joel  */
+/* Joel  */
+void mostrarMenuPrincipal(void)                  
 {
     printf("\n===== SIMULADOR ARTEMIS 3 =====\n");
     printf("1. Configurar mision\n");
@@ -11,29 +13,34 @@ void mostrarMenuPrincipal(void)                  /* Joel  */
     printf("4. Salir\n");
 }
 
-int leerOpcionMenu(void)                         /* Joel  */
+/* Joel  */
+int leerOpcionMenu(void)                         
 {
     /* TODO(joel): leerEnteroValido("Opcion", 1, 4) */
     return 4;  /* stub: permite salir del esqueleto */
 }
 
-void ejecutarConfiguracion(EstadoMision *e)      /* Maxi  */
+/* Maxi  */
+void ejecutarConfiguracion(EstadoMision *e)      
 {
     /* TODO(maxi): pedir v, h, m con validaciones y llamar a guardarConfiguracion */
     (void)e;
 }
 
-void ejecutarSimulacion(EstadoMision *e)         /* Juampi */
+/* Juampi */
+void ejecutarSimulacion(EstadoMision *e)         
 {
     /* TODO(juampi): precargarEventos + recorrer 4 turnos con simularTurno */
     (void)e;
 }
 
-void mostrarExplicacionFisica(void)              /* Maxi  */
+/* Maxi  */
+void mostrarExplicacionFisica(void)              
 {
-    imprimirExplicacionFisica();  /* wrapper delgado */
+      /* wrapper delgado */
 }
 
+/* Joel  */
 int main(void)
 {
     EstadoMision mision;

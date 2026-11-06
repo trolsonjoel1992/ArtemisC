@@ -41,6 +41,9 @@ typedef struct {
     double costo_combustible;
 } Evento;
 
-/* ===== artemis.c ===== */
+/* ===== Prototipos de funciones - módulo artemis.c ===== */
+
+/* ===== Prototipos de funciones - módulo main.c ===== */
+
 
 #endif
