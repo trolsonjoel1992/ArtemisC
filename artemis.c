@@ -14,6 +14,8 @@ void inicializarMision(EstadoMision *e)
     e->combustible = 1000.0; /* Tanque lleno al inicio */
     e->energia_inicial = 0.0;
     e->trabajo_requerido = 0.0;
+    e->velocidad_inicial = 0.0;
+    e->altura_inicial = 0.0;
     e->fase_actual = 0;
     e->cant_historial = 0;
 
@@ -25,10 +27,23 @@ void inicializarMision(EstadoMision *e)
 
 void guardarConfiguracion(EstadoMision *e, double v, double h, double m)
 {
+    /*
+     * Reinicia todo el estado antes de cargar la nueva configuración.
+     * Esto evita que una misión nueva herede:
+     *   - combustible gastado de una simulación anterior,
+     *   - fase_actual = 99 (abortada),
+     *   - historial viejo.
+     */
+    inicializarMision(e);
+
     /* Asigna los valores validados */
     e->velocidad = v;
     e->altura = h;
     e->masa = m;
+
+    /* Se conservan los valores iniciales para los cálculos del reporte final */
+    e->velocidad_inicial = v;
+    e->altura_inicial = h;
 
     /* Calcula energía inicial usando funciones de Maxi */
     double k = calcularEnergiaCinetica(m, v);
@@ -124,14 +139,15 @@ double calcularPuntoEquilibrio(void)
 
 double calcularTrabajoRequerido(EstadoMision *e)
 {
-    double K    = calcularEnergiaCinetica(e->masa, e->velocidad);
-    double r_i  = R_TIERRA + e->altura;
+    /* Se usan los valores iniciales para no depender de la simulación en curso */
+    double K    = calcularEnergiaCinetica(e->masa, e->velocidad_inicial);
+    double r_i  = R_TIERRA + e->altura_inicial;
     double U_i  = calcularEnergiaPotencial(e->masa, r_i);
     double r_eq = calcularPuntoEquilibrio();
 
     /* Energía potencial en el punto de equilibrio (suma Tierra + Luna) */
     double U_eq = (-G * M_TIERRA * e->masa / r_eq)
-                - (G * M_LUNA   * e->masa / (D_TIERRA_LUNA - r_eq));
+                - ( G * M_LUNA   * e->masa / (D_TIERRA_LUNA - r_eq));
 
     /* W_ext por unidad de masa = (U_eq - (U_i + K)) / m */
     return (U_eq - (U_i + K)) / e->masa;
@@ -158,32 +174,54 @@ void imprimirHistorial(const EstadoMision *e)
 
 void imprimirReporte(const EstadoMision *e)
 {
-    double K    = calcularEnergiaCinetica(e->masa, e->velocidad);
-    double r_i  = R_TIERRA + e->altura;
+    /* Verificación de seguridad: sin masa no hay datos válidos para reportar */
+    if (e->masa <= 0.0) {
+        printf("\n[ERROR] No hay datos de mision para generar el reporte.\n");
+        return;
+    }
+
+    double K    = calcularEnergiaCinetica(e->masa, e->velocidad_inicial);
+    double r_i  = R_TIERRA + e->altura_inicial;
     double U_i  = calcularEnergiaPotencial(e->masa, r_i);
     double r_eq = calcularPuntoEquilibrio();
     double U_eq = (-G * M_TIERRA * e->masa / r_eq)
-                - (G * M_LUNA   * e->masa / (D_TIERRA_LUNA - r_eq));
+                - ( G * M_LUNA   * e->masa / (D_TIERRA_LUNA - r_eq));
     double W_ext_total = U_eq - (U_i + K);
     double W_ext_por_masa = W_ext_total / e->masa;
+
+    /*
+     * Estado final:
+     * - fase_actual == 99  -> abortada manualmente
+     * - combustible <= 0   -> fallida por falta de combustible
+     * - caso contrario      -> completada
+     */
+    const char *estado_mision;
+
+    if (e->fase_actual == 99) {
+        estado_mision = "ABORTADA";
+    } else if (e->combustible <= 0.0) {
+        estado_mision = "FALLIDA (sin combustible)";
+    } else {
+        estado_mision = "COMPLETADA";
+    }
 
     printf("\n==========================================\n");
     printf("      REPORTE FINAL DE DESEMPENO          \n");
     printf("==========================================\n");
     printf("  Masa de la nave        : %.2f kg\n", e->masa);
-    printf("  Velocidad inicial TLI  : %.2f m/s\n", e->velocidad);
-    printf("  Altitud inicial        : %.2f m\n", e->altura);
+    printf("  Velocidad inicial TLI  : %.2f m/s\n", e->velocidad_inicial);
+    printf("  Altitud inicial        : %.2f m\n", e->altura_inicial);
     printf("  Combustible restante   : %.2f kg\n", e->combustible);
-    printf("  Estado de la mision    : %s\n",
-           (e->fase_actual == 99) ? "ABORTADA" : "COMPLETADA");
+    printf("  Fase actual            : %d\n", e->fase_actual);
+    printf("  Estado de la mision    : %s\n", estado_mision);
 
     printf("\n--- CALCULO PASO A PASO ---\n");
-    printf("  1. K (E. Cinetica)     : %.6e J\n", K);
-    printf("  2. U_i (E. Pot. LEO)   : %.6e J\n", U_i);
-    printf("  3. r_eq (Punto equil.) : %.6e m\n", r_eq);
-    printf("  4. U_eq (E. Pot. equil.): %.6e J\n", U_eq);
-    printf("  5. W_ext total         : %.6e J\n", W_ext_total);
-    printf("  6. W_ext / m           : %.6e J/kg\n", W_ext_por_masa);
+    printf("  1. K (E. Cinetica)      : %.6e J\n", K);
+    printf("  2. U_i (E. Pot. LEO)    : %.6e J\n", U_i);
+    printf("  3. r_eq (Punto equil.)  : %.6e m\n", r_eq);
+    printf("  4. U_eq (E. Pot. equil.) : %.6e J\n", U_eq);
+    printf("  5. W_ext total          : %.6e J\n", W_ext_total);
+    printf("  6. W_ext / m            : %.6e J/kg\n", W_ext_por_masa);
     printf("==========================================\n\n");
 }
 
@@ -226,11 +264,22 @@ void aplicarMantenerRumbo(EstadoMision *e, Evento *ev)
     /* Consume solo el costo base del evento */
     e->combustible -= ev->costo_combustible;
 
+    /* Se evita que el combustible quede negativo */
+    if (e->combustible < 0.0) {
+        e->combustible = 0.0;
+    }
+
     /* Simulación simplificada: la gravedad frena la nave */
     double r = R_TIERRA + e->altura;
     double gravedad = G * M_TIERRA / (r * r);
     e->velocidad -= gravedad * 10.0;  /* dt = 10s por turno */
-    e->altura    += e->velocidad * 10.0;
+
+    /* La nave no retrocede: si la gravedad la frenó de más, se anula */
+    if (e->velocidad < 0.0) {
+        e->velocidad = 0.0;
+    }
+
+    e->altura += e->velocidad * 10.0;
 
     registrarHistorial(e, "Mantener rumbo: velocidad ajustada por gravedad.");
 }
@@ -240,8 +289,16 @@ void aplicarPropulsorAuxiliar(EstadoMision *e, Evento *ev)
     /* Consume el costo del evento + un extra por el propulsor */
     e->combustible -= (ev->costo_combustible + 30.0);
 
+    /* Se evita que el combustible quede negativo */
+    if (e->combustible < 0.0) {
+        e->combustible = 0.0;
+    }
+
     /* El propulsor da un empujón de velocidad */
     e->velocidad += 150.0;
+
+    /* Con la velocidad incrementada se avanza la posición del turno */
+    e->altura += e->velocidad * 10.0;
 
     registrarHistorial(e, "Propulsor auxiliar: +150 m/s.");
 }
