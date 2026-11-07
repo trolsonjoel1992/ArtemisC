@@ -31,7 +31,7 @@ typedef struct {
     double energia_inicial;
     double trabajo_requerido;
     int    fase_actual;
-    int    cant_historial;                    /* necesario para saber dónde escribir */
+    int    cant_historial;
     char   historial[MAX_HISTORIAL][LARGO_MSG];
 } EstadoMision;
 
@@ -41,38 +41,36 @@ typedef struct {
     double costo_combustible;
 } Evento;
 
-/* Maxi  */
-/* ===== Prototipos de funciones - módulo artemis.c ===== */
-/* (Cálculos físicos, reportes y matemática del escenario) */
+/* Joel */
+void inicializarMision(EstadoMision *e);
+void guardarConfiguracion(EstadoMision *e, double v, double h, double m);
+void precargarEventos(Evento eventos[CANT_EVENTOS]);
+void registrarHistorial(EstadoMision *e, const char *msg);
+int misionSigueActiva(const EstadoMision *e);
+void imprimirExplicacionFisica(void);
 
-// Genera el reporte final paso a paso (energías, trabajo, estado final).
+/* Maxi */
 void generarReporte(EstadoMision *e);
-
-// Calcula la energía cinética: K = 0.5 * m * v^2
 double calcularEnergiaCinetica(double m, double v);
-
-// Calcula la energía potencial gravitatoria: U = -G * M * m / r
 double calcularEnergiaPotencial(double m, double r);
-
-// Calcula el punto de equilibrio gravitatorio Tierra-Luna (r_eq).
 double calcularPuntoEquilibrio(void);
-
-// Calcula el trabajo externo requerido por unidad de masa (W_ext/m).
 double calcularTrabajoRequerido(EstadoMision *e);
-
-// Imprime el historial de eventos de la misión.
 void imprimirHistorial(const EstadoMision *e);
-
-// Imprime el reporte en formato legible para el usuario.
 void imprimirReporte(const EstadoMision *e);
 
-/* ===== Prototipos de funciones - módulo main.c ===== */
-/* (Wrappers de configuración y explicación) */
+/* Juampi */
+void simularTurno(EstadoMision *e, Evento *ev);
+void mostrarEstado(const EstadoMision *e);
+int pedirAccionTurno(void);
+void aplicarMantenerRumbo(EstadoMision *e, Evento *ev);
+void aplicarPropulsorAuxiliar(EstadoMision *e, Evento *ev);
+void aplicarAbortar(EstadoMision *e);
 
-// Pide los datos de la misión al usuario y los guarda en el estado.
+/* main.c */
+void mostrarMenuPrincipal(void);
+int leerOpcionMenu(void);
 void ejecutarConfiguracion(EstadoMision *e);
-
-// Wrapper que llama a la función de explicación física de artemis.c
+void ejecutarSimulacion(EstadoMision *e);
 void mostrarExplicacionFisica(void);
 
 #endif
