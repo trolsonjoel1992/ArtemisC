@@ -1,12 +1,13 @@
 # Artemis 3 — Simulador TLI (Inyección Translunar)
 
+
 ## Integrantes y comisión
 
-- Joel — [completar]
-- Maxi — [completar]
-- Juampi — [completar]
+- Cossani Leguizamon Maximiliano Alejandro
+- Latorre Kanno Juan Pablo
+- Trolson Foschiatti Joel Salvador
 
-**Comisión:** [completar]  
+**Comisión:** K.1.3 
 **Materia:** Algoritmos y Estructuras de Datos — Laboratorio de C  
 **Escenario:** 3 — Inyección Translunar (TLI) e Inercia en Trayectoria Libre
 
