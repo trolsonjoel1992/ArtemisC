@@ -71,8 +71,13 @@ El proyecto incluye un `Makefile` con `-Wall -Wextra -std=c11 -g` y enlace con `
 make        # compila
 ./artemis   # ejecuta
 make clean  # limpia objetos y ejecutable
+
 También se puede compilar y ejecutar en un paso:
+
 make run
+```
+## Arquitectura modular
+```bash
           +----------------------+
           |        main.c        |
           | main() / menú        |
@@ -95,8 +100,9 @@ make run
 
 EstadoMision  --> paso por puntero --> artemis.c
 Evento[4]     --> arreglo fijo      --> precargarEventos()
+```
+## Responsabilidades
 
-Responsabilidades
 main.c: menú principal, opciones y flujo general.
 
 artemis.h: constantes físicas, structs y prototipos.
@@ -105,8 +111,10 @@ artemis.c: estado de misión, cálculos físicos, eventos, historial y reporte.
 
 validaciones.c/.h: lectura segura de enteros y flotantes, mensajes de error.
 
-Registro de uso de IA
-Herramienta	Tarea / consulta	Validación / adaptación
-DeepSeek	Revisión del cumplimiento del TP y detección de casos borde (reconfiguración de misión, combustible agotado).	Se aplicaron las correcciones en guardarConfiguracion() (reinicio de estado) e imprimirReporte() (estado FALLIDA por combustible). Se probó reconfigurando después de abortar y simulando hasta combustible 0.
-DeepSeek	Ayuda para redactar el README y el diagrama ASCII.	El diagrama se adaptó a la arquitectura real del proyecto y se verificó contra los archivos .c/.h. El texto se ajustó al escenario 3 y a las consignas de la cátedra.
-DeepSeek	Consulta sobre buenas prácticas de modularización en C y paso de structs por puntero.	Se validó compilando con -Wall -Wextra y revisando que todas las funciones usen EstadoMision * o Evento * según corresponda.
+## Registro de uso de IA
+
+| Herramienta | Tarea / consulta | Validación / adaptación |
+|-------------|------------------|-------------------------|
+| DeepSeek | Revisión del cumplimiento del TP y detección de casos borde (reconfiguración de misión, combustible agotado). | Se aplicaron las correcciones en `guardarConfiguracion()` (reinicio de estado) e `imprimirReporte()` (estado FALLIDA por combustible). Se probó reconfigurando después de abortar y simulando hasta combustible 0. |
+| DeepSeek | Ayuda para redactar el README y el diagrama ASCII. | El diagrama se adaptó a la arquitectura real del proyecto y se verificó contra los archivos `.c/.h`. El texto se ajustó al escenario 3 y a las consignas de la cátedra. |
+| DeepSeek | Consulta sobre buenas prácticas de modularización en C y paso de structs por puntero. | Se validó compilando con `-Wall -Wextra` y revisando que todas las funciones usen `EstadoMision *` o `Evento *` según corresponda. |
