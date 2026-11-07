@@ -31,7 +31,7 @@ typedef struct {
     double energia_inicial;
     double trabajo_requerido;
     int    fase_actual;
-    int    cant_historial;                    /* necesario para saber dónde escribir */
+    int    cant_historial;
     char   historial[MAX_HISTORIAL][LARGO_MSG];
 } EstadoMision;
 
@@ -41,33 +41,36 @@ typedef struct {
     double costo_combustible;
 } Evento;
 
-/* Juampi  */
-/* ===== Prototipos de funciones - módulo artemis.c ===== */
-/* (Lógica de simulación por turnos, acciones del jugador y estado actual) */
+/* Joel */
+void inicializarMision(EstadoMision *e);
+void guardarConfiguracion(EstadoMision *e, double v, double h, double m);
+void precargarEventos(Evento eventos[CANT_EVENTOS]);
+void registrarHistorial(EstadoMision *e, const char *msg);
+int misionSigueActiva(const EstadoMision *e);
+void imprimirExplicacionFisica(void);
 
-// Orquesta un turno completo: muestra estado, pide acción y la aplica.
+/* Maxi */
+void generarReporte(EstadoMision *e);
+double calcularEnergiaCinetica(double m, double v);
+double calcularEnergiaPotencial(double m, double r);
+double calcularPuntoEquilibrio(void);
+double calcularTrabajoRequerido(EstadoMision *e);
+void imprimirHistorial(const EstadoMision *e);
+void imprimirReporte(const EstadoMision *e);
+
+/* Juampi */
 void simularTurno(EstadoMision *e, Evento *ev);
-
-// Muestra por pantalla los datos actuales de la nave y el evento actual.
 void mostrarEstado(const EstadoMision *e);
-
-// Solicita al usuario la acción a tomar (1 mantener rumbo, 2 propulsor, 3 abortar).
 int pedirAccionTurno(void);
-
-// Aplica la acción de mantener rumbo.
 void aplicarMantenerRumbo(EstadoMision *e, Evento *ev);
-
-// Aplica la acción de encender el propulsor auxiliar.
 void aplicarPropulsorAuxiliar(EstadoMision *e, Evento *ev);
+void aplicarAbortar(EstadoMision *e);
 
-// Aplica la acción de abortar la misión.
-void aplicarAbortar(EstadoMision *e);                               
-
-/* ===== Prototipos de funciones - módulo main.c ===== */
-/* (Wrapper de simulación) */
-
-// Bucle principal que recorre los eventos y llama a simularTurno.
+/* main.c */
+void mostrarMenuPrincipal(void);
+int leerOpcionMenu(void);
+void ejecutarConfiguracion(EstadoMision *e);
 void ejecutarSimulacion(EstadoMision *e);
-
+void mostrarExplicacionFisica(void);
 
 #endif

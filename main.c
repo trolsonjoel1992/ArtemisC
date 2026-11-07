@@ -4,11 +4,7 @@
 #include "validaciones.h"
 
 /* Joel  */
-<<<<<<< HEAD
-void mostrarMenuPrincipal(void)                  
-=======
 void mostrarMenuPrincipal(void)
->>>>>>> 195dc7485f90a0dcce101b3ff91c3a05f5fb3888
 {
     printf("\n==========================================\n");
     printf("      SIMULADOR ARTEMIS 3 - TLI          \n");
@@ -21,29 +17,32 @@ void mostrarMenuPrincipal(void)
 }
 
 /* Joel  */
-<<<<<<< HEAD
-int leerOpcionMenu(void)                         
-=======
 int leerOpcionMenu(void)
->>>>>>> 195dc7485f90a0dcce101b3ff91c3a05f5fb3888
 {
     /* Reutiliza la función de validación segura para evitar letras o fuera de rango */
     return leerEnteroValido("Seleccione una opcion (1-4): ", 1, 4);
 }
 
 /* Maxi  */
-void ejecutarConfiguracion(EstadoMision *e)      
+void ejecutarConfiguracion(EstadoMision *e)
 {
-    /* TODO(maxi): pedir v, h, m con validaciones y llamar a guardarConfiguracion */
-    (void)e;
+    double v, h, m;
+
+    printf("\n--- CONFIGURACION DE MISION ---\n");
+
+    /* Usa las constantes definidas en artemis.h para los rangos */
+    v = leerFlotanteValido("Ingrese Velocidad inicial TLI (1000 a 20000 m/s): ", VEL_MIN, VEL_MAX);
+    h = leerFlotanteValido("Ingrese Altitud de orbita baja (160000 a 500000 m): ", ALT_MIN, ALT_MAX);
+    m = leerFlotanteValido("Ingrese Masa de la nave (10000 a 50000 kg): ", MASA_MIN, MASA_MAX);
+
+    /* Llama a la función de Joel que guarda los datos y calcula energías iniciales */
+    guardarConfiguracion(e, v, h, m);
+
+    printf("[OK] Mision configurada correctamente.\n");
 }
 
 /* Juampi */
-<<<<<<< HEAD
 void ejecutarSimulacion(EstadoMision *e)
-=======
-void ejecutarSimulacion(EstadoMision *e)         
->>>>>>> 195dc7485f90a0dcce101b3ff91c3a05f5fb3888
 {
     Evento eventos[CANT_EVENTOS];
     int i;
@@ -55,7 +54,7 @@ void ejecutarSimulacion(EstadoMision *e)
     }
 
     printf("\n--- INICIANDO SIMULACION TLI ---\n");
-    
+
     /* Precarga los 4 eventos (Funcion de Joel) */
     precargarEventos(eventos);
 
@@ -65,7 +64,7 @@ void ejecutarSimulacion(EstadoMision *e)
         if (!misionSigueActiva(e)) {
             break;
         }
-        
+
         /* Ejecuta el turno actual */
         simularTurno(e, &eventos[i]);
     }
@@ -75,9 +74,10 @@ void ejecutarSimulacion(EstadoMision *e)
 }
 
 /* Maxi  */
-void mostrarExplicacionFisica(void)              
+void mostrarExplicacionFisica(void)
 {
-      /* wrapper delgado */
+    /* Wrapper delgado que llama a la lógica pesada implementada por Joel */
+    imprimirExplicacionFisica();
 }
 
 /* Joel  */

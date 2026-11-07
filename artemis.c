@@ -16,7 +16,7 @@ void inicializarMision(EstadoMision *e)
     e->trabajo_requerido = 0.0;
     e->fase_actual = 0;
     e->cant_historial = 0;
-    
+
     /* Se limpia el arreglo de historial por seguridad */
     for (int i = 0; i < MAX_HISTORIAL; i++) {
         e->historial[i][0] = '\0';
@@ -104,49 +104,87 @@ void imprimirExplicacionFisica(void)
 }
 
 /* Maxi  */
-void generarReporte(EstadoMision *e)
-{
-    /* TODO(maxi) */
-    (void)e;
-}
-
 double calcularEnergiaCinetica(double m, double v)
 {
-    /* TODO(maxi): 0.5*m*v*v */
-    (void)m; (void)v;
-    return 0.0;
+    /* K = 0.5 * m * v^2 */
+    return 0.5 * m * v * v;
 }
 
 double calcularEnergiaPotencial(double m, double r)
 {
-    /* TODO(maxi): -G*M_TIERRA*m/r */
-    (void)m; (void)r;
-    return 0.0;
+    /* U = -G * M_TIERRA * m / r */
+    return -G * M_TIERRA * m / r;
 }
 
 double calcularPuntoEquilibrio(void)
 {
-    /* TODO(maxi): D/(1+sqrt(M_LUNA/M_TIERRA)) */
-    return 0.0;
+    /* r_eq = D / (1 + sqrt(M_LUNA / M_TIERRA)) */
+    return D_TIERRA_LUNA / (1.0 + sqrt(M_LUNA / M_TIERRA));
 }
 
 double calcularTrabajoRequerido(EstadoMision *e)
 {
-    /* TODO(maxi): (U_eq - (U_i + K)) / m */
-    (void)e;
-    return 0.0;
+    double K    = calcularEnergiaCinetica(e->masa, e->velocidad);
+    double r_i  = R_TIERRA + e->altura;
+    double U_i  = calcularEnergiaPotencial(e->masa, r_i);
+    double r_eq = calcularPuntoEquilibrio();
+
+    /* Energía potencial en el punto de equilibrio (suma Tierra + Luna) */
+    double U_eq = (-G * M_TIERRA * e->masa / r_eq)
+                - (G * M_LUNA   * e->masa / (D_TIERRA_LUNA - r_eq));
+
+    /* W_ext por unidad de masa = (U_eq - (U_i + K)) / m */
+    return (U_eq - (U_i + K)) / e->masa;
+}
+
+void generarReporte(EstadoMision *e)
+{
+    registrarHistorial(e, "Simulacion finalizada. Generando reporte.");
+    imprimirReporte(e);
+    imprimirHistorial(e);
 }
 
 void imprimirHistorial(const EstadoMision *e)
 {
-    /* TODO(maxi) */
-    (void)e;
+    printf("\n--- HISTORIAL DE LA MISION ---\n");
+    if (e->cant_historial == 0) {
+        printf("  (Sin eventos registrados)\n");
+        return;
+    }
+    for (int i = 0; i < e->cant_historial; i++) {
+        printf("  [%02d] %s\n", i + 1, e->historial[i]);
+    }
 }
 
 void imprimirReporte(const EstadoMision *e)
 {
-    /* TODO(maxi) */
-    (void)e;
+    double K    = calcularEnergiaCinetica(e->masa, e->velocidad);
+    double r_i  = R_TIERRA + e->altura;
+    double U_i  = calcularEnergiaPotencial(e->masa, r_i);
+    double r_eq = calcularPuntoEquilibrio();
+    double U_eq = (-G * M_TIERRA * e->masa / r_eq)
+                - (G * M_LUNA   * e->masa / (D_TIERRA_LUNA - r_eq));
+    double W_ext_total = U_eq - (U_i + K);
+    double W_ext_por_masa = W_ext_total / e->masa;
+
+    printf("\n==========================================\n");
+    printf("      REPORTE FINAL DE DESEMPENO          \n");
+    printf("==========================================\n");
+    printf("  Masa de la nave        : %.2f kg\n", e->masa);
+    printf("  Velocidad inicial TLI  : %.2f m/s\n", e->velocidad);
+    printf("  Altitud inicial        : %.2f m\n", e->altura);
+    printf("  Combustible restante   : %.2f kg\n", e->combustible);
+    printf("  Estado de la mision    : %s\n",
+           (e->fase_actual == 99) ? "ABORTADA" : "COMPLETADA");
+
+    printf("\n--- CALCULO PASO A PASO ---\n");
+    printf("  1. K (E. Cinetica)     : %.6e J\n", K);
+    printf("  2. U_i (E. Pot. LEO)   : %.6e J\n", U_i);
+    printf("  3. r_eq (Punto equil.) : %.6e m\n", r_eq);
+    printf("  4. U_eq (E. Pot. equil.): %.6e J\n", U_eq);
+    printf("  5. W_ext total         : %.6e J\n", W_ext_total);
+    printf("  6. W_ext / m           : %.6e J/kg\n", W_ext_por_masa);
+    printf("==========================================\n\n");
 }
 
 /* Juampi  */
@@ -201,10 +239,10 @@ void aplicarPropulsorAuxiliar(EstadoMision *e, Evento *ev)
 {
     /* Consume el costo del evento + un extra por el propulsor */
     e->combustible -= (ev->costo_combustible + 30.0);
-    
+
     /* El propulsor da un empujón de velocidad */
     e->velocidad += 150.0;
-    
+
     registrarHistorial(e, "Propulsor auxiliar: +150 m/s.");
 }
 
