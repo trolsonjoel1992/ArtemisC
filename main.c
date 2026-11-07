@@ -4,7 +4,11 @@
 #include "validaciones.h"
 
 /* Joel  */
+<<<<<<< HEAD
+void mostrarMenuPrincipal(void)                  
+=======
 void mostrarMenuPrincipal(void)
+>>>>>>> 195dc7485f90a0dcce101b3ff91c3a05f5fb3888
 {
     printf("\n==========================================\n");
     printf("      SIMULADOR ARTEMIS 3 - TLI          \n");
@@ -17,7 +21,11 @@ void mostrarMenuPrincipal(void)
 }
 
 /* Joel  */
+<<<<<<< HEAD
+int leerOpcionMenu(void)                         
+=======
 int leerOpcionMenu(void)
+>>>>>>> 195dc7485f90a0dcce101b3ff91c3a05f5fb3888
 {
     /* Reutiliza la función de validación segura para evitar letras o fuera de rango */
     return leerEnteroValido("Seleccione una opcion (1-4): ", 1, 4);
@@ -31,10 +39,39 @@ void ejecutarConfiguracion(EstadoMision *e)
 }
 
 /* Juampi */
+<<<<<<< HEAD
+void ejecutarSimulacion(EstadoMision *e)
+=======
 void ejecutarSimulacion(EstadoMision *e)         
+>>>>>>> 195dc7485f90a0dcce101b3ff91c3a05f5fb3888
 {
-    /* TODO(juampi): precargarEventos + recorrer 4 turnos con simularTurno */
-    (void)e;
+    Evento eventos[CANT_EVENTOS];
+    int i;
+
+    /* Verificación de seguridad: si la masa es 0, no se configuró nada */
+    if (e->masa == 0.0) {
+        printf("[ERROR] Debe configurar la mision antes de simular.\n");
+        return;
+    }
+
+    printf("\n--- INICIANDO SIMULACION TLI ---\n");
+    
+    /* Precarga los 4 eventos (Funcion de Joel) */
+    precargarEventos(eventos);
+
+    /* Bucle de simulación por turnos */
+    for (i = 0; i < CANT_EVENTOS; i++) {
+        /* Si la mision se abortó en el turno anterior, corta el bucle */
+        if (!misionSigueActiva(e)) {
+            break;
+        }
+        
+        /* Ejecuta el turno actual */
+        simularTurno(e, &eventos[i]);
+    }
+
+    /* Al finalizar (por éxito o aborto), genera el reporte (Funcion de Maxi) */
+    generarReporte(e);
 }
 
 /* Maxi  */

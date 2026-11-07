@@ -9,7 +9,15 @@
 /* Juampi */
 void limpiarBufferEntrada(void)
 {
+<<<<<<< HEAD
+    int c;
+    /* Lee y descarta caracteres hasta encontrar un salto de línea o el final del archivo */
+    while ((c = getchar()) != '\n' && c != EOF) {
+        /* No hace nada, solo consume los caracteres */
+    }
+=======
     
+>>>>>>> 195dc7485f90a0dcce101b3ff91c3a05f5fb3888
 }
 
 /* Joel */

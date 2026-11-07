@@ -41,35 +41,33 @@ typedef struct {
     double costo_combustible;
 } Evento;
 
-/* Joel  */
+/* Juampi  */
 /* ===== Prototipos de funciones - módulo artemis.c ===== */
-/* (Gestión de estado, historial, inicialización y explicación teórica) */
+/* (Lógica de simulación por turnos, acciones del jugador y estado actual) */
 
-// Inicializa todos los campos del estado en 0.
-void inicializarMision(EstadoMision *e);
+// Orquesta un turno completo: muestra estado, pide acción y la aplica.
+void simularTurno(EstadoMision *e, Evento *ev);
 
-// Asigna los valores validados a la estructura y calcula las energías iniciales.
-void guardarConfiguracion(EstadoMision *e, double v, double h, double m);
+// Muestra por pantalla los datos actuales de la nave y el evento actual.
+void mostrarEstado(const EstadoMision *e);
 
-// Llena el arreglo de eventos con los 4 eventos predefinidos de la misión.
-void precargarEventos(Evento eventos[CANT_EVENTOS]);
+// Solicita al usuario la acción a tomar (1 mantener rumbo, 2 propulsor, 3 abortar).
+int pedirAccionTurno(void);
 
-// Guarda un mensaje en el historial de la misión, respetando el límite.
-void registrarHistorial(EstadoMision *e, const char *msg);
+// Aplica la acción de mantener rumbo.
+void aplicarMantenerRumbo(EstadoMision *e, Evento *ev);
 
-// Devuelve 1 si la misión sigue activa, 0 si fue abortada o terminó.
-int misionSigueActiva(const EstadoMision *e);
+// Aplica la acción de encender el propulsor auxiliar.
+void aplicarPropulsorAuxiliar(EstadoMision *e, Evento *ev);
 
-// Imprime el texto de la explicación física (cubre las preguntas a y d del TFI).
-void imprimirExplicacionFisica(void);
+// Aplica la acción de abortar la misión.
+void aplicarAbortar(EstadoMision *e);                               
 
 /* ===== Prototipos de funciones - módulo main.c ===== */
-/* (Menú principal y navegación base) */
+/* (Wrapper de simulación) */
 
-// Imprime en pantalla las opciones del menú principal.
-void mostrarMenuPrincipal(void);
+// Bucle principal que recorre los eventos y llama a simularTurno.
+void ejecutarSimulacion(EstadoMision *e);
 
-// Lee y valida la opción elegida del menú.
-int leerOpcionMenu(void);
 
 #endif
