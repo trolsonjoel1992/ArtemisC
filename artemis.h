@@ -41,9 +41,35 @@ typedef struct {
     double costo_combustible;
 } Evento;
 
+/* Joel  */
 /* ===== Prototipos de funciones - módulo artemis.c ===== */
+/* (Gestión de estado, historial, inicialización y explicación teórica) */
+
+// Inicializa todos los campos del estado en 0.
+void inicializarMision(EstadoMision *e);
+
+// Asigna los valores validados a la estructura y calcula las energías iniciales.
+void guardarConfiguracion(EstadoMision *e, double v, double h, double m);
+
+// Llena el arreglo de eventos con los 4 eventos predefinidos de la misión.
+void precargarEventos(Evento eventos[CANT_EVENTOS]);
+
+// Guarda un mensaje en el historial de la misión, respetando el límite.
+void registrarHistorial(EstadoMision *e, const char *msg);
+
+// Devuelve 1 si la misión sigue activa, 0 si fue abortada o terminó.
+int misionSigueActiva(const EstadoMision *e);
+
+// Imprime el texto de la explicación física (cubre las preguntas a y d del TFI).
+void imprimirExplicacionFisica(void);
 
 /* ===== Prototipos de funciones - módulo main.c ===== */
+/* (Menú principal y navegación base) */
 
+// Imprime en pantalla las opciones del menú principal.
+void mostrarMenuPrincipal(void);
+
+// Lee y valida la opción elegida del menú.
+int leerOpcionMenu(void);
 
 #endif
