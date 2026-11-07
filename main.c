@@ -4,20 +4,31 @@
 #include "validaciones.h"
 
 /* Joel  */
+<<<<<<< HEAD
 void mostrarMenuPrincipal(void)                  
+=======
+void mostrarMenuPrincipal(void)
+>>>>>>> 195dc7485f90a0dcce101b3ff91c3a05f5fb3888
 {
-    printf("\n===== SIMULADOR ARTEMIS 3 =====\n");
+    printf("\n==========================================\n");
+    printf("      SIMULADOR ARTEMIS 3 - TLI          \n");
+    printf("==========================================\n");
     printf("1. Configurar mision\n");
     printf("2. Iniciar simulacion TLI\n");
     printf("3. Ver explicacion fisica\n");
     printf("4. Salir\n");
+    printf("==========================================\n");
 }
 
 /* Joel  */
+<<<<<<< HEAD
 int leerOpcionMenu(void)                         
+=======
+int leerOpcionMenu(void)
+>>>>>>> 195dc7485f90a0dcce101b3ff91c3a05f5fb3888
 {
-    /* TODO(joel): leerEnteroValido("Opcion", 1, 4) */
-    return 4;  /* stub: permite salir del esqueleto */
+    /* Reutiliza la función de validación segura para evitar letras o fuera de rango */
+    return leerEnteroValido("Seleccione una opcion (1-4): ", 1, 4);
 }
 
 /* Maxi  */
@@ -28,7 +39,11 @@ void ejecutarConfiguracion(EstadoMision *e)
 }
 
 /* Juampi */
+<<<<<<< HEAD
 void ejecutarSimulacion(EstadoMision *e)
+=======
+void ejecutarSimulacion(EstadoMision *e)         
+>>>>>>> 195dc7485f90a0dcce101b3ff91c3a05f5fb3888
 {
     Evento eventos[CANT_EVENTOS];
     int i;
@@ -71,6 +86,7 @@ int main(void)
     EstadoMision mision;
     int opcion;
 
+    /* Inicializa todos los campos del struct en 0 */
     inicializarMision(&mision);
 
     do {
@@ -78,11 +94,22 @@ int main(void)
         opcion = leerOpcionMenu();
 
         switch (opcion) {
-            case 1: ejecutarConfiguracion(&mision); break;
-            case 2: ejecutarSimulacion(&mision);    break;
-            case 3: mostrarExplicacionFisica();     break;
-            case 4: printf("Saliendo...\n");        break;
-            default: printf("[ERROR] Opcion invalida.\n"); break;
+            case 1:
+                ejecutarConfiguracion(&mision);
+                break;
+            case 2:
+                ejecutarSimulacion(&mision);
+                break;
+            case 3:
+                mostrarExplicacionFisica();
+                break;
+            case 4:
+                printf("\nSaliendo del simulador...\n");
+                break;
+            default:
+                /* Inalcanzable gracias a leerEnteroValido, pero se mantiene por buenas prácticas */
+                printf("[ERROR] Opcion invalida.\n");
+                break;
         }
     } while (opcion != 4);
 
