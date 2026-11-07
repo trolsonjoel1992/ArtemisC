@@ -41,25 +41,33 @@ typedef struct {
     double costo_combustible;
 } Evento;
 
-/* ===== artemis.c ===== */
-void   inicializarMision(EstadoMision *e);                               /* Joel   */
-void   guardarConfiguracion(EstadoMision *e, double v, double h, double m); /* Joel */
-void   precargarEventos(Evento eventos[CANT_EVENTOS]);                   /* Joel   */
-void   simularTurno(EstadoMision *e, Evento *ev);                        /* Juampi */
-void   mostrarEstado(const EstadoMision *e);                             /* Juampi */
-int    pedirAccionTurno(void);                                           /* Juampi */
-void   aplicarMantenerRumbo(EstadoMision *e, Evento *ev);                /* Juampi */
-void   aplicarPropulsorAuxiliar(EstadoMision *e, Evento *ev);            /* Juampi */
-void   aplicarAbortar(EstadoMision *e);                                  /* Juampi */
-void   registrarHistorial(EstadoMision *e, const char *msg);             /* Joel   */
-int    misionSigueActiva(const EstadoMision *e);                         /* Joel   */
-void   generarReporte(EstadoMision *e);                                  /* Maxi   */
-double calcularEnergiaCinetica(double m, double v);                      /* Maxi   */
-double calcularEnergiaPotencial(double m, double r);                     /* Maxi   */
-double calcularPuntoEquilibrio(void);                                    /* Maxi   */
-double calcularTrabajoRequerido(EstadoMision *e);                        /* Maxi   */
-void   imprimirHistorial(const EstadoMision *e);                         /* Maxi   */
-void   imprimirReporte(const EstadoMision *e);                           /* Maxi   */
-void   imprimirExplicacionFisica(void);                                  /* Joel   */
+/* Juampi  */
+/* ===== Prototipos de funciones - módulo artemis.c ===== */
+/* (Lógica de simulación por turnos, acciones del jugador y estado actual) */
+
+// Orquesta un turno completo: muestra estado, pide acción y la aplica.
+void simularTurno(EstadoMision *e, Evento *ev);
+
+// Muestra por pantalla los datos actuales de la nave y el evento actual.
+void mostrarEstado(const EstadoMision *e);
+
+// Solicita al usuario la acción a tomar (1 mantener rumbo, 2 propulsor, 3 abortar).
+int pedirAccionTurno(void);
+
+// Aplica la acción de mantener rumbo.
+void aplicarMantenerRumbo(EstadoMision *e, Evento *ev);
+
+// Aplica la acción de encender el propulsor auxiliar.
+void aplicarPropulsorAuxiliar(EstadoMision *e, Evento *ev);
+
+// Aplica la acción de abortar la misión.
+void aplicarAbortar(EstadoMision *e);                               
+
+/* ===== Prototipos de funciones - módulo main.c ===== */
+/* (Wrapper de simulación) */
+
+// Bucle principal que recorre los eventos y llama a simularTurno.
+void ejecutarSimulacion(EstadoMision *e);
+
 
 #endif

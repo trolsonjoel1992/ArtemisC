@@ -1,8 +1,10 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include "artemis.h"
 #include "validaciones.h"
 
-void mostrarMenuPrincipal(void)                  /* Joel  */
+/* Joel  */
+void mostrarMenuPrincipal(void)                  
 {
     printf("\n===== SIMULADOR ARTEMIS 3 =====\n");
     printf("1. Configurar mision\n");
@@ -11,29 +13,59 @@ void mostrarMenuPrincipal(void)                  /* Joel  */
     printf("4. Salir\n");
 }
 
-int leerOpcionMenu(void)                         /* Joel  */
+/* Joel  */
+int leerOpcionMenu(void)                         
 {
     /* TODO(joel): leerEnteroValido("Opcion", 1, 4) */
     return 4;  /* stub: permite salir del esqueleto */
 }
 
-void ejecutarConfiguracion(EstadoMision *e)      /* Maxi  */
+/* Maxi  */
+void ejecutarConfiguracion(EstadoMision *e)      
 {
     /* TODO(maxi): pedir v, h, m con validaciones y llamar a guardarConfiguracion */
     (void)e;
 }
 
-void ejecutarSimulacion(EstadoMision *e)         /* Juampi */
+/* Juampi */
+void ejecutarSimulacion(EstadoMision *e)
 {
-    /* TODO(juampi): precargarEventos + recorrer 4 turnos con simularTurno */
-    (void)e;
+    Evento eventos[CANT_EVENTOS];
+    int i;
+
+    /* Verificación de seguridad: si la masa es 0, no se configuró nada */
+    if (e->masa == 0.0) {
+        printf("[ERROR] Debe configurar la mision antes de simular.\n");
+        return;
+    }
+
+    printf("\n--- INICIANDO SIMULACION TLI ---\n");
+    
+    /* Precarga los 4 eventos (Funcion de Joel) */
+    precargarEventos(eventos);
+
+    /* Bucle de simulación por turnos */
+    for (i = 0; i < CANT_EVENTOS; i++) {
+        /* Si la mision se abortó en el turno anterior, corta el bucle */
+        if (!misionSigueActiva(e)) {
+            break;
+        }
+        
+        /* Ejecuta el turno actual */
+        simularTurno(e, &eventos[i]);
+    }
+
+    /* Al finalizar (por éxito o aborto), genera el reporte (Funcion de Maxi) */
+    generarReporte(e);
 }
 
-void mostrarExplicacionFisica(void)              /* Maxi  */
+/* Maxi  */
+void mostrarExplicacionFisica(void)              
 {
-    imprimirExplicacionFisica();  /* wrapper delgado */
+      /* wrapper delgado */
 }
 
+/* Joel  */
 int main(void)
 {
     EstadoMision mision;

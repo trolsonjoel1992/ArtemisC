@@ -1,10 +1,19 @@
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <errno.h>
 #include "validaciones.h"
 
-/* Juampi — base para los otros dos lectores, mergear PRIMERO */
+#define MAX_BUFFER 100
+
+/* Juampi */
 void limpiarBufferEntrada(void)
 {
-    /* TODO(juampi): descartar hasta '\n' o EOF */
+    int c;
+    /* Lee y descarta caracteres hasta encontrar un salto de línea o el final del archivo */
+    while ((c = getchar()) != '\n' && c != EOF) {
+        /* No hace nada, solo consume los caracteres */
+    }
 }
 
 /* Joel */
